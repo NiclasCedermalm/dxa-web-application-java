@@ -15,7 +15,9 @@ import java.util.Map;
 
 @Slf4j
 @Component
-@Scope(value = "request")
+//@Scope(value = "request")
+@Scope(value = "session")
+// TODO: Should the context claims really be looked up for each request??
 public class ContextEngineImpl implements ContextEngine {
 
     @Autowired
