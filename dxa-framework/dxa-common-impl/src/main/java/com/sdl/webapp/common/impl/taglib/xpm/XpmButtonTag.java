@@ -1,5 +1,6 @@
 package com.sdl.webapp.common.impl.taglib.xpm;
 
+import com.sdl.webapp.common.api.WebRequestContext;
 import com.sdl.webapp.common.api.model.RegionModel;
 import com.sdl.webapp.common.api.model.region.RegionModelImpl;
 import com.sdl.webapp.common.markup.html.HtmlMultiNode;
@@ -7,6 +8,7 @@ import com.sdl.webapp.common.markup.html.HtmlNode;
 import com.sdl.webapp.common.markup.html.builders.HtmlBuilders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * <p>XpmButtonTag class.</p>
@@ -54,7 +56,8 @@ public class XpmButtonTag extends XpmMarkupTag {
         } else {
             String path = this.pageContext.getServletContext().getContextPath();
             String title = "Edit " + this.region.getXpmMetadata().get(RegionModelImpl.INCLUDED_FROM_PAGE_TITLE_XPM_METADATA_KEY);
-            String editUrl = '/' + path + this.region.getXpmMetadata().get(RegionModelImpl.INCLUDED_FROM_PAGE_FILE_NAME_XPM_METADATA_KEY);
+            String editUrl = this.getWebRequestContext().getLocalization().localizePath("/") + path + this.region.getXpmMetadata().get(RegionModelImpl.INCLUDED_FROM_PAGE_FILE_NAME_XPM_METADATA_KEY);
+
             return HtmlBuilders.div()
                     .withClass("xpm-button")
                     .withAttribute("style", "z-index:1")
@@ -70,4 +73,12 @@ public class XpmButtonTag extends XpmMarkupTag {
                     .build();
         }
     }
+
+    protected WebRequestContext getWebRequestContext() {
+
+        return WebApplicationContextUtils.getRequiredWebApplicationContext(pageContext.getServletContext())
+                .getBean(WebRequestContext.class);
+
+    }
+
 }
