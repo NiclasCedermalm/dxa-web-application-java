@@ -8,6 +8,7 @@ import com.sdl.webapp.common.api.content.StaticContentNotFoundException;
 import com.sdl.webapp.common.api.localization.Localization;
 import com.sdl.webapp.common.util.MimeUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.Hours;
 import org.joda.time.Weeks;
 import org.slf4j.Logger;
@@ -76,7 +77,9 @@ public class StaticContentInterceptor extends HandlerInterceptorAdapter {
 
         if (contentResource != null) {
             String mimeType = MimeUtils.getMimeType(contentResource);
-            res.getHeaders().setContentType(MediaType.parseMediaType(mimeType));
+            if ( ! StringUtils.isEmpty(mimeType) ) {
+                res.getHeaders().setContentType(MediaType.parseMediaType(mimeType));
+            }
 
             if (isToBeRefreshed(res, req.getHeaders().getIfNotModifiedSince(),
                     ManagementFactory.getRuntimeMXBean().getStartTime(), false)) {
