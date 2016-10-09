@@ -70,28 +70,32 @@ public final class EntityBuilderImpl implements EntityBuilder {
 
     private static void fillItemWithExternalMetadata(EclItem eclItem, Map<String, FieldSet> extensionData) {
         FieldSet externalEclFieldSet = extensionData.get("ECL-ExternalMetadata");
-        Map<String, Object> externalMetadata = new HashMap<>(externalEclFieldSet.getContent().size());
-        for (Map.Entry<String, Field> entry : externalEclFieldSet.getContent().entrySet()) {
-            final List<Object> values = entry.getValue().getValues();
+        if ( externalEclFieldSet != null ) {
+            Map<String, Object> externalMetadata = new HashMap<>(externalEclFieldSet.getContent().size());
+            for (Map.Entry<String, Field> entry : externalEclFieldSet.getContent().entrySet()) {
+                final List<Object> values = entry.getValue().getValues();
 
-            if (!values.isEmpty()) {
-                externalMetadata.put(entry.getKey(), values.get(0));
+                if (!values.isEmpty()) {
+                    externalMetadata.put(entry.getKey(), values.get(0));
+                }
             }
+            eclItem.setExternalMetadata(externalMetadata);
         }
-        eclItem.setExternalMetadata(externalMetadata);
     }
 
     private static void fillItemWithEclData(EclItem eclItem, Map<String, FieldSet> extensionData) {
         FieldSet eclFieldSet = extensionData.get("ECL");
-        eclItem.setDisplayTypeId(getValueFromFieldSet(eclFieldSet, "DisplayTypeId"));
-        eclItem.setTemplateFragment(getValueFromFieldSet(eclFieldSet, "TemplateFragment"));
-        String fileName = getValueFromFieldSet(eclFieldSet, "FileName");
-        if (!isEmpty(fileName)) {
-            eclItem.setFileName(fileName);
-        }
-        String mimeType = getValueFromFieldSet(eclFieldSet, "MimeType");
-        if (!isEmpty(mimeType)) {
-            eclItem.setMimeType(mimeType);
+        if ( eclFieldSet != null ) {
+            eclItem.setDisplayTypeId(getValueFromFieldSet(eclFieldSet, "DisplayTypeId"));
+            eclItem.setTemplateFragment(getValueFromFieldSet(eclFieldSet, "TemplateFragment"));
+            String fileName = getValueFromFieldSet(eclFieldSet, "FileName");
+            if (!isEmpty(fileName)) {
+                eclItem.setFileName(fileName);
+            }
+            String mimeType = getValueFromFieldSet(eclFieldSet, "MimeType");
+            if (!isEmpty(mimeType)) {
+                eclItem.setMimeType(mimeType);
+            }
         }
     }
 
